@@ -1,8 +1,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../utils/prisma";
-import bcrypt from "bcrypt";
+import { prisma } from "../../../utils/prisma";
 import Joi from "joi";
-import { hashPassword } from "../../utils/auth";
+import { hashPassword } from "../../../utils/auth";
 
 const CreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, password } = req.body;

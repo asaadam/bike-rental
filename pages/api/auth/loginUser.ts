@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { compareHash } from "../../utils/auth";
-import { prisma } from "../../utils/prisma";
+import { compareHash } from "../../../utils/auth";
+import { prisma } from "../../../utils/prisma";
 import jwt from "jsonwebtoken";
 import getConfig from "next/config";
 
