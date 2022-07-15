@@ -4,7 +4,7 @@ import { prisma } from "../../../utils/prisma";
 import jwt from "jsonwebtoken";
 import getConfig from "next/config";
 
-const { serverRuntimeConfig, publicRuntimeConfig } = getConfig()
+const { publicRuntimeConfig } = getConfig()
 
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
