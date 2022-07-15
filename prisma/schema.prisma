@@ -16,10 +16,41 @@ enum ROLE {
 }
 
 model User {
+  id         String       @id @default(cuid())
+  name       String
+  email      String       @unique
+  password   String
+  role       ROLE
+  createdAt  DateTime     @default(now())
+  RentedBike RentedBike[]
+}
+
+model Bike {
+  id         String       @id @default(cuid())
+  model      String
+  color      String
+  location   String
+  createdAt  DateTime     @default(now())
+  BikeRating BikeRating[]
+  RentedBike RentedBike[]
+}
+
+model RentedBike {
   id        String   @id @default(cuid())
-  name      String   @unique
-  email     String
-  password  String
-  role      ROLE
+  bikeId    String
+  userId    String
+  startDate DateTime
+  endDate   DateTime
+  isCancled Boolean  @default(false)
+  createdAt DateTime @default(now())
+  bike      Bike     @relation(fields: [bikeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model BikeRating {
+  id        String   @id @default(cuid())
+  bikeId    String
+  rating    Int
+  bike      Bike     @relation(fields: [bikeId], references: [id])
   createdAt DateTime @default(now())
 }
