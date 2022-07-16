@@ -17,9 +17,9 @@ const BookBike = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const decodedUser = await checkValidToken(req);
     try {
-      // check if bike available to book 
       const rentedBike = await prisma.rentedBike.findMany({
         where: {
+          id: bikeId,
           isCancled: false,
           OR: [
             {
