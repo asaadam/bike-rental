@@ -17,29 +17,23 @@ const insertRating = async (rentedId: string, rating: number, bikeId: string) =>
       }
     });
 
-    if (ratingResult.rentedBikeId) {
-      const currentRating = await prisma.bikeRating.findFirst({
-        where: {
-          id: bikeId
-        }
-      });
-
-      const countRating = await prisma.bikeRating.count({
+    if (ratingResult) {
+      const currentRating = await prisma.bikeRating.aggregate({
+        _avg: {
+          rating: true
+        },
         where: {
           RentedBike: {
             bikeId: bikeId
           }
         }
-      });
-
-      const newRating = ((currentRating?.rating || 0) + rating) / countRating;
-
+      })
       const bike = await prisma.bike.update({
         where: {
           id: bikeId
         },
         data: {
-          rating: newRating
+          rating: currentRating._avg.rating ? Math.round(currentRating._avg.rating) : 0
         }
       })
       return bike;
@@ -59,7 +53,6 @@ const AddRating = async (req: NextApiRequest, res: NextApiResponse) => {
   }
   try {
     const decodedUser = await checkValidToken(req);
-    //check if user is owner of bike
 
     try {
       const rentedBike = await prisma.rentedBike.findFirst({
