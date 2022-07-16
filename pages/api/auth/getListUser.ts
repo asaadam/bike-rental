@@ -3,7 +3,15 @@ import { prisma } from '../../../utils/prisma';
 
 
 const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const user = await prisma.user.findMany();
+  const user = await prisma.user.findMany({
+    include: {
+      RentedBike: {
+        include: {
+          bike: true
+        }
+      }
+    }
+  });
   res.json(user);
 }
 
