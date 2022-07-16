@@ -12,7 +12,7 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
       }
     }
   });
-  res.json(user);
+  return res.json(user);
 }
 
 export default getUser;

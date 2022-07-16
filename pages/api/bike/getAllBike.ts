@@ -40,7 +40,7 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
     ofset = (pageNumber - 1) * limitNumber;
     try {
       const rentedData = await prisma.rentedBike.findMany({
-        where: {
+        where: (startDateQuery && endDate) ? {
           isCancled: false,
           OR: [
             {
@@ -87,8 +87,9 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
               ]
             },
           ]
-        }
+        } : undefined
       });
+
       const bikes = await prisma.bike.findMany({
         where: {
           color: {
@@ -112,10 +113,10 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       const bikeData = bikes.map(bike => {
-        const findData = rentedData.find(rented => rented.bikeId === bike.id);
+        const findData = rentedData.filter(rented => rented.bikeId === bike.id);
         return {
           ...bike,
-          rentedData: { ...findData },
+          rentedData: findData,
         }
       });
 
