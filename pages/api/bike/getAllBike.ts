@@ -8,18 +8,27 @@ type Query = {
   limit?: string,
   startDateQuery: string,
   endDate: string,
+  color: string,
+  model: string,
+  location: string,
+  rating: string,
+
 }
 
 const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await checkValidToken(req);
     const query = req.query as unknown as Query;
-    const { page, limit, startDateQuery, endDate } = query;
+    const { page, limit, startDateQuery, endDate, color, model, location, rating } = query;
     const validationQuery = Joi.object({
       page: Joi.string().required(),
       limit: Joi.string().required(),
       startDateQuery: Joi.string().optional(),
       endDate: Joi.string().optional(),
+      color: Joi.string().optional(),
+      model: Joi.string().optional(),
+      location: Joi.string().optional(),
+      rating: Joi.string().optional(),
     });
     let limitNumber;
     let ofset;
@@ -30,58 +39,70 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
     limitNumber = parseInt(limit || '0');
     ofset = (pageNumber - 1) * limitNumber;
     try {
-      const bikes = await prisma.bike.findMany({
+      const rentedData = await prisma.rentedBike.findMany({
         where: {
-          RentedBike: {
-            none: {
-              isCancled: false,
-              OR: [
+          isCancled: false,
+          OR: [
+            {
+              AND: [
                 {
-                  AND: [
-                    {
-                      startDate: {
-                        lte: startDateQuery
-                      }
-                    },
-                    {
-                      endDate: {
-                        gte: startDateQuery
-                      }
-                    },
-                  ],
+                  startDate: {
+                    lte: startDateQuery
+                  }
                 },
                 {
-                  AND: [
-                    {
-                      startDate: {
-                        lte: endDate
-                      }
-                    },
-                    {
-                      endDate: {
-                        gte: endDate
-                      }
-                    }
-                  ]
+                  endDate: {
+                    gte: startDateQuery
+                  }
+                },
+              ],
+            },
+            {
+              AND: [
+                {
+                  startDate: {
+                    lte: endDate
+                  }
+                },
+                {
+                  endDate: {
+                    gte: endDate
+                  }
                 }
-                ,
+              ]
+            }
+            ,
+            {
+              AND: [
                 {
-                  AND: [
-                    {
-                      startDate: {
-                        gte: startDateQuery
-                      }
-                    },
-                    {
-                      endDate: {
-                        lte: endDate
-                      }
-                    }
-                  ]
+                  startDate: {
+                    gte: startDateQuery
+                  }
                 },
+                {
+                  endDate: {
+                    lte: endDate
+                  }
+                }
               ]
             },
-          }
+          ]
+        }
+      });
+      const bikes = await prisma.bike.findMany({
+        where: {
+          color: {
+            equals: color || undefined
+          },
+          model: {
+            equals: model || undefined
+          },
+          location: {
+            equals: location || undefined
+          },
+          rating: {
+            equals: rating ? parseInt(rating ?? "0") : undefined
+          },
         },
         skip: ofset ?? undefined,
         take: limitNumber ?? undefined,
@@ -89,11 +110,19 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
           createdAt: "desc"
         }
       });
-      return res.json({ message: bikes });
+
+      const bikeData = bikes.map(bike => {
+        const findData = rentedData.find(rented => rented.bikeId === bike.id);
+        return {
+          ...bike,
+          rentedData: { ...findData },
+        }
+      });
+
+      return res.json({ bikeData });
     }
     catch (e) {
       return res.status(500).send({ message: e });
-
     }
   }
   catch (e) {

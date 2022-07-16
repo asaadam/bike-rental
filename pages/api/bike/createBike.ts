@@ -12,7 +12,7 @@ const CreateBike = async (req: NextApiRequest, res: NextApiResponse) => {
       const bike = await prisma.bike.create({
         data: {
           color,
-          location,
+          location: location.toLowerCase(),
           model
         }
       });
