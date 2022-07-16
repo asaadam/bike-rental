@@ -29,67 +29,72 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
     const pageNumber = parseInt(page || '0');
     limitNumber = parseInt(limit || '0');
     ofset = (pageNumber - 1) * limitNumber;
-
-    const bikes = await prisma.bike.findMany({
-      where: {
-        RentedBike: {
-          none: {
-            isCancled: false,
-            OR: [
-              {
-                AND: [
-                  {
-                    startDate: {
-                      lte: startDateQuery
+    try {
+      const bikes = await prisma.bike.findMany({
+        where: {
+          RentedBike: {
+            none: {
+              isCancled: false,
+              OR: [
+                {
+                  AND: [
+                    {
+                      startDate: {
+                        lte: startDateQuery
+                      }
+                    },
+                    {
+                      endDate: {
+                        gte: startDateQuery
+                      }
+                    },
+                  ],
+                },
+                {
+                  AND: [
+                    {
+                      startDate: {
+                        lte: endDate
+                      }
+                    },
+                    {
+                      endDate: {
+                        gte: endDate
+                      }
                     }
-                  },
-                  {
-                    endDate: {
-                      gte: startDateQuery
+                  ]
+                }
+                ,
+                {
+                  AND: [
+                    {
+                      startDate: {
+                        gte: startDateQuery
+                      }
+                    },
+                    {
+                      endDate: {
+                        lte: endDate
+                      }
                     }
-                  },
-                ],
-              },
-              {
-                AND: [
-                  {
-                    startDate: {
-                      lte: endDate
-                    }
-                  },
-                  {
-                    endDate: {
-                      gte: endDate
-                    }
-                  }
-                ]
-              }
-              ,
-              {
-                AND: [
-                  {
-                    startDate: {
-                      gte: startDateQuery
-                    }
-                  },
-                  {
-                    endDate: {
-                      lte: endDate
-                    }
-                  }
-                ]
-              },
-            ]
-          },
+                  ]
+                },
+              ]
+            },
+          }
+        },
+        skip: ofset ?? undefined,
+        take: limitNumber ?? undefined,
+        orderBy: {
+          createdAt: "desc"
         }
-      },
-      skip: ofset ?? undefined,
-      take: limitNumber ?? undefined,
-      orderBy: {
-        createdAt: "desc"
-      }
-    });
-    return res.json({ message: bikes });
+      });
+      return res.json({ message: bikes });
+    }
+    catch (e) {
+      return res.status(500).send({ message: e });
+
+    }
   }
   catch (e) {
     return res.status(401).json(e);
