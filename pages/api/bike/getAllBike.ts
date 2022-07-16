@@ -1,11 +1,6 @@
 import { prisma } from "../../../utils/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
-import jwt from "jsonwebtoken";
-import getConfig from "next/config";
 import { checkValidToken } from "../../../utils/auth";
-import Joi from "joi";
-
-const { publicRuntimeConfig } = getConfig()
 
 type Query = {
   page?: string,
@@ -31,7 +26,7 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
         createdAt: "desc"
       }
     });
-    res.json({ message: bikes });
+    return res.json({ message: bikes });
   }
   catch (e) {
     return res.status(401).json(e);
