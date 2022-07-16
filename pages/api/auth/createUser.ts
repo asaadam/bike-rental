@@ -1,15 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../utils/prisma";
-import Joi from "joi";
-import { hashPassword } from "../../../utils/auth";
+import { hashPassword, joiSchema } from "../../../utils/auth";
 
 const CreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, password } = req.body;
-  const joiSchema = Joi.object({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    password: Joi.string().required().pattern(/^[a-zA-Z0-9]{3,30}$/),
-  })
 
   const validation = joiSchema.validate(req.body);
   if (validation.error) {

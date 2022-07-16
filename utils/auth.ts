@@ -2,6 +2,8 @@ import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
 import getConfig from "next/config";
+import { User } from "@prisma/client";
+import Joi from "joi";
 
 const { publicRuntimeConfig } = getConfig();
 
@@ -14,7 +16,16 @@ async function compareHash(hashA: string, hashB: string) {
   return await bcrypt.compare(hashA, hashB);
 }
 
-async function checkValidToken(req: NextApiRequest) {
+const joiSchema = Joi.object({
+  name: Joi.string().required(),
+  email: Joi.string().email().required(),
+  password: Joi.string().required().pattern(/^[a-zA-Z0-9]{3,30}$/),
+})
+
+
+type CustomUser = { user: User }
+
+async function checkValidToken(req: NextApiRequest): Promise<CustomUser> {
   return new Promise((resolve, reject) => {
     const token = req.headers.authorization;
 
@@ -24,7 +35,7 @@ async function checkValidToken(req: NextApiRequest) {
     else {
       try {
         const decode = jwt.verify(token, publicRuntimeConfig.JWT_SECRET);
-        resolve(decode)
+        resolve(decode as CustomUser);
       }
       catch (e) {
         reject({ message: "Token Invalid" })
@@ -33,4 +44,4 @@ async function checkValidToken(req: NextApiRequest) {
   })
 }
 
-export { hashPassword, compareHash, checkValidToken }
+export { hashPassword, compareHash, checkValidToken, joiSchema }
