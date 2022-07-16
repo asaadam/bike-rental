@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -31,26 +32,27 @@ model Bike {
   color      String
   location   String
   createdAt  DateTime     @default(now())
-  BikeRating BikeRating[]
+  rating     Int          @default(0)
   RentedBike RentedBike[]
 }
 
 model RentedBike {
-  id        String   @id @default(cuid())
-  bikeId    String
-  userId    String
-  startDate DateTime
-  endDate   DateTime
-  isCancled Boolean  @default(false)
-  createdAt DateTime @default(now())
-  bike      Bike     @relation(fields: [bikeId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  id         String      @id @default(cuid())
+  bikeId     String
+  userId     String
+  startDate  DateTime
+  endDate    DateTime
+  isCancled  Boolean     @default(false)
+  createdAt  DateTime    @default(now())
+  bike       Bike        @relation(fields: [bikeId], references: [id])
+  user       User        @relation(fields: [userId], references: [id])
+  BikeRating BikeRating?
 }
 
 model BikeRating {
-  id        String   @id @default(cuid())
-  bikeId    String
-  rating    Int
-  bike      Bike     @relation(fields: [bikeId], references: [id])
-  createdAt DateTime @default(now())
+  id           String     @id @default(cuid())
+  rating       Int
+  createdAt    DateTime   @default(now())
+  RentedBike   RentedBike @relation(fields: [rentedBikeId], references: [id])
+  rentedBikeId String     @unique
 }
