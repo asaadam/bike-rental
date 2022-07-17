@@ -21,8 +21,8 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
     const query = req.query as unknown as Query;
     const { page, limit, startDateQuery, endDate, color, model, location, rating } = query;
     const validationQuery = Joi.object({
-      page: Joi.string().required(),
-      limit: Joi.string().required(),
+      page: Joi.string().optional(),
+      limit: Joi.string().optional(),
       startDateQuery: Joi.string().optional(),
       endDate: Joi.string().optional(),
       color: Joi.string().optional(),
@@ -30,14 +30,14 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
       location: Joi.string().optional(),
       rating: Joi.string().optional(),
     });
-    let limitNumber;
-    let ofset;
+    // let limitNumber;
+    // let ofset;
     if (validationQuery.validate(query).error) {
       return res.status(400).json({ message: validationQuery.validate(query).error });
     }
-    const pageNumber = parseInt(page || '0');
-    limitNumber = parseInt(limit || '0');
-    ofset = (pageNumber - 1) * limitNumber;
+    // const pageNumber = parseInt(page || '0');
+    // limitNumber = parseInt(limit || '0');
+    // ofset = (pageNumber - 1) * limitNumber;
     try {
       const rentedData = await prisma.rentedBike.findMany({
         where: (startDateQuery && endDate) ? {
@@ -105,8 +105,8 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
             equals: rating ? parseInt(rating ?? "0") : undefined
           },
         },
-        skip: ofset ?? undefined,
-        take: limitNumber ?? undefined,
+        // skip: ofset ?? undefined,
+        // take: limitNumber ?? undefined,
         orderBy: {
           createdAt: "desc"
         }

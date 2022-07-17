@@ -27,7 +27,7 @@ type CustomUser = { user: User }
 
 async function checkValidToken(req: NextApiRequest): Promise<CustomUser> {
   return new Promise((resolve, reject) => {
-    const token = req.headers.authorization;
+    const token = req.headers.authorization || req.cookies.token;
 
     if (!token) {
       reject({ message: "Unauthorized" });

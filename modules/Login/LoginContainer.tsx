@@ -7,7 +7,9 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { useUserStore } from '../../store/UserStore';
 import { ApiError } from '../../types/Error';
 import { useLogin } from './LoginService';
 
@@ -23,6 +25,10 @@ function LoginContainer() {
     formState: { errors, isSubmitting },
   } = useForm<FormValues>();
 
+  const router = useRouter();
+
+  const { setUser } = useUserStore();
+
   const { mutate } = useLogin();
 
   const toast = useToast();
@@ -30,7 +36,8 @@ function LoginContainer() {
   const onSubmit: SubmitHandler<FormValues> = (data) =>
     mutate(data, {
       onSuccess: (data) => {
-        console.log(data);
+        setUser(data.user);
+        router.push('/');
       },
       onError: (e) => {
         const error = e as ApiError;
