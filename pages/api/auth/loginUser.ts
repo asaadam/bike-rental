@@ -8,18 +8,18 @@ const { publicRuntimeConfig } = getConfig()
 
 
 const login = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email, password } = req.body;
+  const { email, password } = req.body
   const user = await prisma.user.findFirst({
     where: {
       email: email,
     },
   });
   if (!user) {
-    return res.status(401).send("Email not found");
+    return res.status(401).json({ message: "Email not found" });
   } else {
     const validPassword = await compareHash(password, user.password);
     if (!validPassword) {
-      res.status(401).send("Invalid  password");
+      return res.status(401).json({ message: "Invalid  password" });
     }
     const token = jwt.sign({ user }, publicRuntimeConfig.JWT_SECRET);
     res.setHeader("Set-Cookie", `token=${token}; httpOnly; path=/`);
