@@ -11,33 +11,39 @@ import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useUserStore } from '../../store/UserStore';
 import { ApiError } from '../../types/Error';
-import { useLogin } from './LoginService';
+import { useRegister } from './RegisterService';
 
 type FormValues = {
   email: string;
+  name: string;
   password: string;
+  rePassword: string;
 };
 
-function LoginContainer() {
+function RegisterContainer() {
   const {
     handleSubmit,
     register,
+    watch,
     formState: { errors },
   } = useForm<FormValues>();
 
   const router = useRouter();
 
-  const { setUser } = useUserStore();
-
-  const { mutate, isLoading } = useLogin();
+  const { mutate, isLoading } = useRegister();
 
   const toast = useToast();
 
-  const onSubmit: SubmitHandler<FormValues> = (data) =>
-    mutate(data, {
+  const onSubmit: SubmitHandler<FormValues> = (data) => {
+    const { rePassword, ...restData } = data;
+    mutate(restData, {
       onSuccess: (data) => {
-        setUser(data.user);
-        router.push('/');
+        toast({
+          title: 'Succes',
+          description: 'User created successfully',
+          status: 'success',
+        });
+        router.push('/login');
       },
       onError: (e) => {
         const error = e as ApiError;
@@ -48,11 +54,25 @@ function LoginContainer() {
         });
       },
     });
+  };
 
   return (
     <VStack>
       <form onSubmit={handleSubmit(onSubmit)}>
         <VStack>
+          <FormControl isInvalid={!!errors.name?.message}>
+            <FormLabel htmlFor="email">Name</FormLabel>
+            <Input
+              id="name"
+              placeholder="name"
+              {...register('name', {
+                required: 'This is required',
+              })}
+            />
+            <FormErrorMessage>
+              {errors.name && errors.name.message}
+            </FormErrorMessage>
+          </FormControl>
           <FormControl isInvalid={!!errors.email?.message}>
             <FormLabel htmlFor="email">Email</FormLabel>
             <Input
@@ -80,6 +100,23 @@ function LoginContainer() {
               {errors.password && errors.password.message}
             </FormErrorMessage>
           </FormControl>
+          <FormControl isInvalid={!!errors.rePassword?.message}>
+            <FormLabel htmlFor="rePassword">Input Password again</FormLabel>
+            <Input
+              type="password"
+              id="rePassword"
+              placeholder="Input Password again"
+              {...register('rePassword', {
+                required: 'This is required',
+                validate: (value) => {
+                  return value === watch('password') || 'Password is not same';
+                },
+              })}
+            />
+            <FormErrorMessage>
+              {errors.rePassword && errors.rePassword.message}
+            </FormErrorMessage>
+          </FormControl>
           <Button mt={4} colorScheme="teal" isLoading={isLoading} type="submit">
             Submit
           </Button>
@@ -89,4 +126,4 @@ function LoginContainer() {
   );
 }
 
-export { LoginContainer };
+export { RegisterContainer };

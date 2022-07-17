@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Button, HStack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useUserStore } from '../../store/UserStore';
 
@@ -6,17 +6,25 @@ function ButtonNavbar() {
   const { user, removeUser } = useUserStore();
   if (user) {
     return (
-      <Link href="/logout" passHref>
-        <Button variant="ghost" color="white" onClick={() => removeUser()}>
-          Logout
-        </Button>
-      </Link>
+      <HStack>
+        <Button>My booking List</Button>
+        <Link href="/logout" passHref>
+          <Button color="white" onClick={() => removeUser()}>
+            Logout
+          </Button>
+        </Link>
+      </HStack>
     );
   }
   return (
-    <Link href="/login" passHref>
-      <Button> Login </Button>
-    </Link>
+    <HStack>
+      <Link href="/login" passHref>
+        <Button> Login </Button>
+      </Link>
+      <Link href="/register" passHref>
+        <Button> Register </Button>
+      </Link>
+    </HStack>
   );
 }
 

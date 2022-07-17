@@ -10,8 +10,15 @@ type LoginResponse = {
   user: User
 }
 
+type RegisterRequest = {
+  email: string;
+  password: string;
+  name: string;
+}
+
 export type {
   LoginRequest,
-  LoginResponse
+  LoginResponse,
+  RegisterRequest,
 }
 
