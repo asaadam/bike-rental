@@ -19,7 +19,7 @@ const BookBike = async (req: NextApiRequest, res: NextApiResponse) => {
     try {
       const rentedBike = await prisma.rentedBike.findMany({
         where: {
-          id: bikeId,
+          bikeId: bikeId,
           isCancled: false,
           OR: [
             {
