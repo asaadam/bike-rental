@@ -45,10 +45,12 @@ function BikeDetail({ bike, variant = 'default', onEdit }: Props) {
             {variant === 'admin' && <AccordionIcon />}
           </Grid>
         </AccordionButton>
-        <HStack>
-          <Button onClick={onEdit}>Edit Bike</Button>
-          <Button>Delete Bike</Button>
-        </HStack>
+        {variant === 'admin' && (
+          <HStack>
+            <Button onClick={onEdit}>Edit Bike</Button>
+            <Button>Delete Bike</Button>
+          </HStack>
+        )}
       </HStack>
       {variant === 'admin' && (
         <AccordionPanel pb={4}>

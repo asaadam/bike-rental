@@ -3,7 +3,7 @@ import { prisma } from "../../../utils/prisma";
 import { hashPassword, joiSchema } from "../../../utils/auth";
 
 const CreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
 
   const validation = joiSchema.validate(req.body);
   if (validation.error) {
@@ -23,7 +23,7 @@ const CreateUser = async (req: NextApiRequest, res: NextApiResponse) => {
       name,
       email,
       password: hasedPassword,
-      role: "USER"
+      role: role || "USER"
     },
   })
 

@@ -6,11 +6,10 @@ import { useUserStore } from '../../store/UserStore';
 function ButtonNavbar() {
   const { user } = useUserStore();
   const cookies = new Cookies();
-
-  if (user) {
+  if (cookies.get('isLoggedIn')) {
     return (
       <HStack>
-        {user.role === 'ADMIN' && cookies.get('isLoggedin') && (
+        {user?.role === 'ADMIN' && (
           <>
             <Link href="/dashboard" passHref>
               <Button>Go To dashboard</Button>

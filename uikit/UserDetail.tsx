@@ -16,9 +16,10 @@ import { formatDisplayDate } from '../utils/formatDate';
 
 type Props = {
   user: UserResponse;
+  onEdit?: () => void;
 };
 
-function UserDetail({ user }: Props) {
+function UserDetail({ user, onEdit }: Props) {
   return (
     <AccordionItem>
       <HStack>
@@ -27,12 +28,11 @@ function UserDetail({ user }: Props) {
             <Heading size="sm">Name: {user.name}</Heading>
             <Heading size="sm">Email: {user.email}</Heading>
             <Heading size="sm">Role : {user.role}</Heading>
-
             <AccordionIcon />
           </Grid>
         </AccordionButton>
         <HStack>
-          <Button>Edit User</Button>
+          <Button onClick={onEdit}>Edit User</Button>
           <Button>Delete User</Button>
         </HStack>
       </HStack>
