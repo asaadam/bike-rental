@@ -61,9 +61,9 @@ function BikeDetail({
             {variant === 'admin' && <AccordionIcon />}
           </Grid>
         </AccordionButton>
-        <Box flex={1} minW="100px">
+        <Box flex={1} minW={variant !== 'admin' ? '100px' : undefined}>
           {variant === 'admin' ? (
-            <HStack>
+            <HStack w="100%">
               <Button onClick={onEdit}>Edit Bike</Button>
               <Button>Delete Bike</Button>
             </HStack>

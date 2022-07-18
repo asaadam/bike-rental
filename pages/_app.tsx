@@ -15,7 +15,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const cookies = new Cookies();
   const isLoggedIn = cookies.get('isLoggedIn');
 
-  const { data, refetch } = useOwnData();
+  const { data, refetch } = useOwnData({
+    options: {
+      refetchOnWindowFocus: false,
+      enabled: false,
+    },
+  });
 
   useEffect(() => {
     if (!user && isLoggedIn) {

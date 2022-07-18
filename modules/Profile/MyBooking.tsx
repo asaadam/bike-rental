@@ -4,7 +4,11 @@ import { formatDisplayDate } from '../../utils/formatDate';
 import { useOwnData } from './GetOwnDataService';
 
 function MyBooking() {
-  const { data, isLoading, refetch } = useOwnData();
+  const { data, isLoading, refetch } = useOwnData({
+    options: {
+      cacheTime: 0,
+    },
+  });
   return (
     <>
       {isLoading && <Spinner />}
