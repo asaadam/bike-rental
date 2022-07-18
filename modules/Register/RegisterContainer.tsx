@@ -22,10 +22,11 @@ type FormValues = {
 type RegisterVariant = 'admin' | 'user';
 
 type Props = {
+  onSuccess?: () => void;
   variant?: RegisterVariant;
 };
 
-function RegisterContainer({ variant = 'user' }: Props) {
+function RegisterContainer({ variant = 'user', onSuccess }: Props) {
   const {
     handleSubmit,
     register,
@@ -53,6 +54,9 @@ function RegisterContainer({ variant = 'user' }: Props) {
           router.push('/login');
         }
         reset();
+        if (onSuccess) {
+          onSuccess();
+        }
       },
       onError: (e) => {
         const error = e as ApiError;

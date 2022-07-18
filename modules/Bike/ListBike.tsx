@@ -1,9 +1,16 @@
 import {
   Accordion,
-  Checkbox,
+  Button,
   Heading,
   HStack,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  useDisclosure,
   VStack,
 } from '@chakra-ui/react';
 import { BikeDetail } from '../../uikit/BikeDetail';
@@ -11,6 +18,7 @@ import { useGetBike } from './ListBikeService';
 import DatePicker from 'react-datepicker';
 import { useState } from 'react';
 import dayjs from 'dayjs';
+import { CreateBikeContainer } from './CreateBike';
 
 export type BikeDetailVariant = 'default' | 'admin';
 
@@ -27,8 +35,9 @@ function ListBikeContainer({ variant = 'default' }: Props) {
     model: '',
     rating: '',
   });
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data } = useGetBike(
+  const { data, refetch } = useGetBike(
     variant === 'default'
       ? {
           startDateQuery: filterData.startDate.toISOString(),
@@ -99,12 +108,28 @@ function ListBikeContainer({ variant = 'default' }: Props) {
           </VStack>
         </HStack>
       )}
+      {variant === 'admin' && (
+        <Button onClick={onOpen} mb={4}>
+          Create bike
+        </Button>
+      )}
 
       <Accordion allowMultiple width={'100%'}>
         {data?.bikeData?.map?.((bike) => (
           <BikeDetail bike={bike} key={bike.id} variant={variant} />
         ))}
       </Accordion>
+
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Create New Bike</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <CreateBikeContainer onSuccess={() => refetch()} />
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </>
   );
 }

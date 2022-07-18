@@ -22,4 +22,11 @@ type GetAllBikeResponseType = {
   bikeData: Array<AllBikeType>;
 }
 
-export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType }
+type CreateBikeRequest = {
+  model: string
+  color: string
+  location: string
+
+}
+
+export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest }
