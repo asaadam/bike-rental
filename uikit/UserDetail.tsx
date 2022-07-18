@@ -38,12 +38,12 @@ function UserDetail({ user }: Props) {
       </HStack>
       <AccordionPanel pb={4}>
         <Heading size="md">Rented Data</Heading>
-        {user.RentedBike.length === 0 && (
+        {user?.RentedBike?.length === 0 && (
           <Heading color="red" size="md">
             This user it&#39;s not rented any bikes yet
           </Heading>
         )}
-        {user.RentedBike.map((rentedBike) => (
+        {user?.RentedBike?.map?.((rentedBike) => (
           <Grid
             key={rentedBike.id}
             width={'100%'}

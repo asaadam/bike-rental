@@ -5,6 +5,7 @@ import { useUserStore } from '../../store/UserStore';
 function ButtonNavbar() {
   const { user, removeUser } = useUserStore();
   if (user) {
+    console.log(user);
     return (
       <HStack>
         {user.role === 'ADMIN' && (

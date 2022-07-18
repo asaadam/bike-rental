@@ -25,6 +25,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (data) {
+      console.log('datarefetched', data);
       setUser(data);
     }
   }, [data, setUser]);

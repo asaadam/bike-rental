@@ -7,7 +7,7 @@ function ListUsers() {
   return (
     <div>
       <Accordion allowMultiple width={'100%'}>
-        {data?.map((user) => (
+        {data?.map?.((user) => (
           <UserDetail user={user} key={user.id} />
         ))}
       </Accordion>

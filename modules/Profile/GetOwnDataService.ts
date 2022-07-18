@@ -7,7 +7,7 @@ async function getOwnData(): Promise<UserResponse> {
 }
 
 function useOwnData() {
-  return useQuery([], async () => await getOwnData(), {
+  return useQuery(['getOwnData'], async () => await getOwnData(), {
     refetchOnWindowFocus: false,
     enabled: false
   });

@@ -7,7 +7,7 @@ async function getUersList(): Promise<UsersResponse> {
 }
 
 function useGetUsersList() {
-  return useQuery([], async () => await getUersList());
+  return useQuery(['getListUser'], async () => await getUersList());
 }
 
 export { useGetUsersList }

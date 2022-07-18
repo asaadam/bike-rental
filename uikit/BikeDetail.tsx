@@ -45,7 +45,7 @@ function BikeDetail({ bike, variant = 'default' }: Props) {
       {variant === 'admin' && (
         <AccordionPanel pb={4}>
           <Heading size="md">Rented Data</Heading>
-          {bike.rentedData.map((rented) => (
+          {bike?.rentedData?.map?.((rented) => (
             <Grid
               key={rented.id}
               width={'100%'}

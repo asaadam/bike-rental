@@ -101,7 +101,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
       )}
 
       <Accordion allowMultiple width={'100%'}>
-        {data?.bikeData.map((bike) => (
+        {data?.bikeData?.map?.((bike) => (
           <BikeDetail bike={bike} key={bike.id} variant={variant} />
         ))}
       </Accordion>
