@@ -23,6 +23,7 @@ type GetAllBikeResponseType = {
 }
 
 type CreateBikeRequest = {
+  id?: string
   model: string
   color: string
   location: string

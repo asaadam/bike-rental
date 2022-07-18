@@ -19,6 +19,7 @@ import DatePicker from 'react-datepicker';
 import { useState } from 'react';
 import dayjs from 'dayjs';
 import { CreateBikeContainer } from './CreateBike';
+import { AllBikeType } from '../../types/Bike';
 
 export type BikeDetailVariant = 'default' | 'admin';
 
@@ -35,6 +36,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
     model: '',
     rating: '',
   });
+
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { data, refetch } = useGetBike(
@@ -49,6 +51,13 @@ function ListBikeContainer({ variant = 'default' }: Props) {
         }
       : {}
   );
+
+  const [selectedData, setSelectedData] = useState<AllBikeType>();
+
+  const customClose = () => {
+    setSelectedData(undefined);
+    onClose();
+  };
 
   return (
     <>
@@ -116,17 +125,38 @@ function ListBikeContainer({ variant = 'default' }: Props) {
 
       <Accordion allowMultiple width={'100%'}>
         {data?.bikeData?.map?.((bike) => (
-          <BikeDetail bike={bike} key={bike.id} variant={variant} />
+          <BikeDetail
+            bike={bike}
+            key={bike.id}
+            variant={variant}
+            onEdit={() => {
+              onOpen();
+              setSelectedData(bike);
+            }}
+          />
         ))}
       </Accordion>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
+      <Modal isOpen={isOpen} onClose={customClose}>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Create New Bike</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateBikeContainer onSuccess={() => refetch()} />
+            <CreateBikeContainer
+              defaultValues={
+                selectedData && {
+                  id: selectedData.id,
+                  color: selectedData.color,
+                  location: selectedData.location,
+                  model: selectedData.model,
+                }
+              }
+              onSuccess={() => {
+                refetch();
+                onClose();
+              }}
+            />
           </ModalBody>
         </ModalContent>
       </Modal>

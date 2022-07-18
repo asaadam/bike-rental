@@ -8,11 +8,14 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ApiError } from '../../types/Error';
 import { useCreateBike } from './CreateBikeService';
+import { useEditBike } from './EditBikeService';
 
 type FormValues = {
+  id?: string;
   model: string;
   color: string;
   location: string;
@@ -20,21 +23,55 @@ type FormValues = {
 
 type Props = {
   onSuccess?: () => void;
+  defaultValues?: FormValues;
 };
 
-function CreateBikeContainer({ onSuccess }: Props) {
+function CreateBikeContainer({ onSuccess, defaultValues }: Props) {
   const {
     handleSubmit,
     register,
     formState: { errors },
+
     reset,
   } = useForm<FormValues>();
 
+  useEffect(() => {
+    if (defaultValues) {
+      reset(defaultValues);
+    }
+  }, [defaultValues, reset]);
+
   const { mutate, isLoading } = useCreateBike();
+
+  const { mutate: mutateEdit, isLoading: isLoadingEdit } = useEditBike();
 
   const toast = useToast();
 
   const onSubmit: SubmitHandler<FormValues> = (data) => {
+    if (defaultValues) {
+      mutateEdit(
+        {
+          ...data,
+          id: defaultValues.id,
+        },
+        {
+          onSuccess: () => {
+            if (onSuccess) {
+              onSuccess();
+            }
+          },
+          onError: (e) => {
+            const error = e as ApiError;
+            toast({
+              title: error.response.data.message,
+              status: 'error',
+              isClosable: true,
+            });
+          },
+        }
+      );
+      return;
+    }
     mutate(data, {
       onSuccess: () => {
         toast({
@@ -102,7 +139,12 @@ function CreateBikeContainer({ onSuccess }: Props) {
             </FormErrorMessage>
           </FormControl>
 
-          <Button mt={4} colorScheme="teal" isLoading={isLoading} type="submit">
+          <Button
+            mt={4}
+            colorScheme="teal"
+            isLoading={isLoading || isLoadingEdit}
+            type="submit"
+          >
             Submit
           </Button>
         </VStack>
