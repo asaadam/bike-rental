@@ -43,7 +43,6 @@ function ListBikeContainer({ variant = 'default' }: Props) {
 
   return (
     <>
-      <Heading size="lg">List of Bike</Heading>
       {variant === 'default' && (
         <HStack>
           <VStack>

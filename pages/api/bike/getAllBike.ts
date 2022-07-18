@@ -92,9 +92,6 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
             },
           ]
         } : undefined,
-        orderBy: {
-
-        }
       });
 
       const bikes = await prisma.bike.findMany({

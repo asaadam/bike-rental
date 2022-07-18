@@ -9,7 +9,6 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { useUserStore } from '../../store/UserStore';
 import { ApiError } from '../../types/Error';
 import { useRegister } from './RegisterService';
 
@@ -20,12 +19,19 @@ type FormValues = {
   rePassword: string;
 };
 
-function RegisterContainer() {
+type RegisterVariant = 'admin' | 'user';
+
+type Props = {
+  variant?: RegisterVariant;
+};
+
+function RegisterContainer({ variant = 'user' }: Props) {
   const {
     handleSubmit,
     register,
     watch,
     formState: { errors },
+    reset,
   } = useForm<FormValues>();
 
   const router = useRouter();
@@ -37,13 +43,16 @@ function RegisterContainer() {
   const onSubmit: SubmitHandler<FormValues> = (data) => {
     const { rePassword, ...restData } = data;
     mutate(restData, {
-      onSuccess: (data) => {
+      onSuccess: () => {
         toast({
           title: 'Succes',
           description: 'User created successfully',
           status: 'success',
         });
-        router.push('/login');
+        if (variant === 'user') {
+          router.push('/login');
+        }
+        reset();
       },
       onError: (e) => {
         const error = e as ApiError;
@@ -64,7 +73,7 @@ function RegisterContainer() {
             <FormLabel htmlFor="email">Name</FormLabel>
             <Input
               id="name"
-              placeholder="name"
+              placeholder="Name"
               {...register('name', {
                 required: 'This is required',
               })}

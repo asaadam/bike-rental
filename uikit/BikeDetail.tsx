@@ -8,7 +8,7 @@ import {
   Heading,
   HStack,
 } from '@chakra-ui/react';
-import { BikeDetailVariant } from '../modules/ListBike/ListBike';
+import { BikeDetailVariant } from '../modules/Bike/ListBike';
 import { AllBikeType } from '../types/Bike';
 import { formatDisplayDate } from '../utils/formatDate';
 
