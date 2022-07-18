@@ -9,6 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import Cookies from 'universal-cookie';
 import { useUserStore } from '../../store/UserStore';
 import { ApiError } from '../../types/Error';
 import { useLogin } from './LoginService';
@@ -28,6 +29,7 @@ function LoginContainer() {
   const router = useRouter();
 
   const { setUser } = useUserStore();
+  const cookies = new Cookies();
 
   const { mutate, isLoading } = useLogin();
 
@@ -37,6 +39,7 @@ function LoginContainer() {
     mutate(data, {
       onSuccess: (data) => {
         setUser(data.user);
+        cookies.set('isLoggedIn', true);
         router.push('/');
       },
       onError: (e) => {

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { RentedBike, User } from "@prisma/client";
 
 type LoginRequest = {
   email: string;
@@ -14,11 +14,16 @@ type RegisterRequest = {
   email: string;
   password: string;
   name: string;
+};
+
+type UserResponse = User & {
+  RentedBike: RentedBike
 }
 
 export type {
   LoginRequest,
   LoginResponse,
   RegisterRequest,
+  UserResponse
 }
 
