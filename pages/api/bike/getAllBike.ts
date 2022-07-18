@@ -17,7 +17,6 @@ type Query = {
 
 const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await checkValidToken(req);
     const query = req.query as unknown as Query;
     const { page, limit, startDateQuery, endDate, color, model, location, rating } = query;
     const validationQuery = Joi.object({
