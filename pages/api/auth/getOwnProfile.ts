@@ -6,7 +6,7 @@ import { prisma } from '../../../utils/prisma';
 const getOwnData = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const currentUser = await checkValidToken(req);
-    const user = await prisma.user.findMany({
+    const user = await prisma.user.findFirst({
       include: {
         RentedBike: {
           include: {
