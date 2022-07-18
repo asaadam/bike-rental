@@ -27,7 +27,12 @@ type CreateBikeRequest = {
   model: string
   color: string
   location: string
-
 }
 
-export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest }
+type BookBikeRequest = {
+  bikeId: string
+  startDate: string
+  endDate: string
+}
+
+export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest, BookBikeRequest }

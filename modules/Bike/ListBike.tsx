@@ -126,6 +126,11 @@ function ListBikeContainer({ variant = 'default' }: Props) {
       <Accordion allowMultiple width={'100%'}>
         {data?.bikeData?.map?.((bike) => (
           <BikeDetail
+            onSuccess={() => refetch()}
+            filter={{
+              startDate: filterData.startDate,
+              endDate: filterData.endDate,
+            }}
             bike={bike}
             key={bike.id}
             variant={variant}

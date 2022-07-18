@@ -10,6 +10,7 @@ import {
   HStack,
   VStack,
 } from '@chakra-ui/react';
+import { BookBike } from '../modules/Bike/BookBike';
 import { BikeDetailVariant } from '../modules/Bike/ListBike';
 import { AllBikeType } from '../types/Bike';
 import { formatDisplayDate } from '../utils/formatDate';
@@ -18,9 +19,20 @@ type Props = {
   bike: AllBikeType;
   variant?: BikeDetailVariant;
   onEdit?: () => void;
+  filter?: {
+    startDate: Date;
+    endDate: Date;
+  };
+  onSuccess?: () => void;
 };
 
-function BikeDetail({ bike, variant = 'default', onEdit }: Props) {
+function BikeDetail({
+  bike,
+  variant = 'default',
+  onEdit,
+  filter,
+  onSuccess,
+}: Props) {
   return (
     <AccordionItem>
       <HStack>
@@ -37,10 +49,15 @@ function BikeDetail({ bike, variant = 'default', onEdit }: Props) {
             <Heading size="sm">Color : {bike.color}</Heading>
             <Heading size="sm"> Rating : {bike.rating} </Heading>
             {variant === 'default' && (
-              <Heading size="sm">
-                Available for book :
-                <Checkbox isChecked={bike.rentedData.length === 0} />
-              </Heading>
+              <>
+                <Heading size="sm">
+                  Available for book{' '}
+                  <Checkbox isChecked={bike.rentedData.length === 0} />
+                </Heading>
+                {bike.rentedData.length === 0 && filter && (
+                  <BookBike bike={bike} filter={filter} onSuccess={onSuccess} />
+                )}
+              </>
             )}
             {variant === 'admin' && <AccordionIcon />}
           </Grid>
