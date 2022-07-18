@@ -91,7 +91,10 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
               ]
             },
           ]
-        } : undefined
+        } : undefined,
+        orderBy: {
+
+        }
       });
 
       const bikes = await prisma.bike.findMany({
@@ -111,9 +114,6 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
         },
         // skip: ofset ?? undefined,
         // take: limitNumber ?? undefined,
-        orderBy: {
-          createdAt: "desc"
-        }
       });
 
       const bikeData = bikes.map(bike => {
@@ -122,6 +122,14 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
           ...bike,
           rentedData: findData,
         }
+      }).sort((a, b) => {
+        if (a.rentedData.length > b.rentedData.length) {
+          return 1;
+        }
+        if (a.rentedData.length < b.rentedData.length) {
+          return -1;
+        }
+        return 0;
       });
 
       return res.json({ bikeData });
