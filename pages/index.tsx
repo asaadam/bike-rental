@@ -1,10 +1,6 @@
-import { Button } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import Image from 'next/image';
-import { useQuery } from 'react-query';
 import { ListBikeContainer } from '../modules/Bike/ListBike';
-import styles from '../styles/Home.module.css';
 import { Layout } from '../uikit/Layout';
 
 const Home: NextPage = () => {

@@ -1,14 +1,16 @@
 import { Button, HStack } from '@chakra-ui/react';
 import Link from 'next/link';
+import Cookies from 'universal-cookie';
 import { useUserStore } from '../../store/UserStore';
 
 function ButtonNavbar() {
-  const { user, removeUser } = useUserStore();
+  const { user } = useUserStore();
+  const cookies = new Cookies();
+
   if (user) {
-    console.log(user);
     return (
       <HStack>
-        {user.role === 'ADMIN' && (
+        {user.role === 'ADMIN' && cookies.get('isLoggedin') && (
           <>
             <Link href="/dashboard" passHref>
               <Button>Go To dashboard</Button>
@@ -17,9 +19,7 @@ function ButtonNavbar() {
         )}
         <Button>My booking List</Button>
         <Link href="/logout" passHref>
-          <Button color="white" onClick={() => removeUser()}>
-            Logout
-          </Button>
+          <Button color="white">Logout</Button>
         </Link>
       </HStack>
     );
