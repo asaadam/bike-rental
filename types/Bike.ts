@@ -1,4 +1,4 @@
-import { Bike, RentedBike } from "@prisma/client";
+import { Bike, BikeRating, RentedBike, User } from "@prisma/client";
 
 type GetAllBikeRequestType = {
   startDateQuery: string
@@ -9,12 +9,17 @@ type GetAllBikeRequestType = {
   rating: string
 };
 
+type RentedDataCustom = RentedBike & {
+  user: User
+  BikeRating: BikeRating
+}
+
 type AllBikeType = Bike & {
-  rentedData: Array<RentedBike>
+  rentedData: Array<RentedDataCustom>
 }
 
 type GetAllBikeResponseType = {
   bikeData: Array<AllBikeType>;
 }
 
-export type { GetAllBikeRequestType, GetAllBikeResponseType }
+export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType }

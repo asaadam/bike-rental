@@ -40,6 +40,10 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
     // ofset = (pageNumber - 1) * limitNumber;
     try {
       const rentedData = await prisma.rentedBike.findMany({
+        include: {
+          user: true,
+          BikeRating: true
+        },
         where: (startDateQuery && endDate) ? {
           isCancled: false,
           OR: [
