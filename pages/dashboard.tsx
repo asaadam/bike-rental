@@ -15,6 +15,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { ListBikeContainer } from '../modules/Bike/ListBike';
+import { ListUsers } from '../modules/Profile/ListUsers';
 import { RegisterContainer } from '../modules/Register/RegisterContainer';
 import { Layout } from '../uikit/Layout';
 
@@ -35,7 +36,7 @@ export default function DashboardPage() {
           </TabPanel>
           <TabPanel>
             <Button onClick={onOpen}>Create user</Button>
-            <p>two!</p>
+            <ListUsers />
           </TabPanel>
         </TabPanels>
       </Tabs>

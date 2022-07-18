@@ -7,7 +7,8 @@ const getUser = async (req: NextApiRequest, res: NextApiResponse) => {
     include: {
       RentedBike: {
         include: {
-          bike: true
+          bike: true,
+          BikeRating: true
         }
       }
     }
