@@ -7,7 +7,13 @@ function ButtonNavbar() {
   if (user) {
     return (
       <HStack>
-        {user.role === 'ADMIN' && <Button>Go To dashboard</Button>}
+        {user.role === 'ADMIN' && (
+          <>
+            <Link href="/dashboard" passHref>
+              <Button>Go To dashboard</Button>
+            </Link>
+          </>
+        )}
         <Button>My booking List</Button>
         <Link href="/logout" passHref>
           <Button color="white" onClick={() => removeUser()}>
