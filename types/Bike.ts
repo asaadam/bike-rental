@@ -1,12 +1,12 @@
 import { Bike, BikeRating, RentedBike, User } from "@prisma/client";
 
 type GetAllBikeRequestType = {
-  startDateQuery: string
-  endDate: string
-  color: string
-  model: string
-  location: string
-  rating: string
+  startDateQuery?: string
+  endDate?: string
+  color?: string
+  model?: string
+  location?: string
+  rating?: string
 };
 
 type RentedDataCustom = RentedBike & {

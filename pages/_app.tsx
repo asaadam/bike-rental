@@ -6,6 +6,7 @@ import { useUserStore } from '../store/UserStore';
 import React, { useEffect } from 'react';
 import Cookies from 'universal-cookie';
 import { useOwnData } from '../modules/Profile/GetOwnDataService';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const queryClient = new QueryClient();
 
