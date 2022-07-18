@@ -123,7 +123,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
         </Button>
       )}
 
-      <Accordion allowMultiple width={'100%'}>
+      <Accordion allowMultiple width={'100%'} mt={4}>
         {data?.bikeData?.map?.((bike) => (
           <BikeDetail
             onSuccess={() => refetch()}

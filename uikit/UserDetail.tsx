@@ -13,6 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { UserResponse } from '../types/Auth';
 import { formatDisplayDate } from '../utils/formatDate';
+import { Rentedbike } from './RentedBike';
 
 type Props = {
   user: UserResponse;
@@ -44,41 +45,12 @@ function UserDetail({ user, onEdit }: Props) {
           </Heading>
         )}
         {user?.RentedBike?.map?.((rentedBike) => (
-          <Grid
+          <Rentedbike
+            onSuccess={() => {}}
+            rentedBike={rentedBike}
             key={rentedBike.id}
-            width={'100%'}
-            templateColumns="repeat(4, 1fr)"
-            gap={6}
-          >
-            <Box>
-              <Heading size="sm">Bike Detail</Heading>
-              <VStack>
-                <Heading size="sm">Model : {rentedBike.bike.model}</Heading>
-                <Heading size="sm">
-                  Location : {rentedBike.bike.location}
-                </Heading>
-                <Heading size="sm">Color : {rentedBike.bike.color}</Heading>
-                <Heading size="sm">
-                  Bike Rating : {rentedBike.bike.rating}
-                </Heading>
-              </VStack>
-            </Box>
-            <Heading size="sm">
-              Rented From : {formatDisplayDate(rentedBike.startDate)}
-            </Heading>
-            <Heading size="sm">
-              Rented To : {formatDisplayDate(rentedBike.endDate)}
-            </Heading>
-            <Heading size="sm">
-              Rating:
-              <br />
-              {rentedBike?.BikeRating?.rating ? (
-                rentedBike.BikeRating.rating
-              ) : (
-                <p color="red">This user it&#39;s not giving rating yet</p>
-              )}
-            </Heading>
-          </Grid>
+            variant="admin"
+          />
         ))}
       </AccordionPanel>
     </AccordionItem>

@@ -30,6 +30,7 @@ type UserResponse = User & {
 type UsersResponse = Array<UserResponse>;
 
 export type {
+  RentedBikeWithBike,
   LoginRequest,
   LoginResponse,
   RegisterRequest,

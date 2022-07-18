@@ -1,12 +1,19 @@
 import { Button, HStack } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie';
 import { useUserStore } from '../../store/UserStore';
 
 function ButtonNavbar() {
   const { user } = useUserStore();
-  const cookies = new Cookies();
-  if (cookies.get('isLoggedIn')) {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const cookies = new Cookies();
+
+    cookies.get('isLoggedIn') ? setIsLoggedIn(true) : setIsLoggedIn(false);
+  }, []);
+  if (isLoggedIn) {
     return (
       <HStack>
         {user?.role === 'ADMIN' && (
@@ -16,7 +23,9 @@ function ButtonNavbar() {
             </Link>
           </>
         )}
-        <Button>My booking List</Button>
+        <Link href="/mybooking" passHref>
+          <Button>My booking List</Button>
+        </Link>
         <Link href="/logout" passHref>
           <Button color="white">Logout</Button>
         </Link>

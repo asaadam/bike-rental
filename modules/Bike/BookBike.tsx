@@ -47,7 +47,7 @@ function BookBike({ bike, filter, onSuccess }: Props) {
   };
 
   return (
-    <>
+    <div>
       <Button onClick={onOpen}>Book Bike</Button>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -85,7 +85,7 @@ function BookBike({ bike, filter, onSuccess }: Props) {
           </ModalFooter>
         </ModalContent>
       </Modal>
-    </>
+    </div>
   );
 }
 

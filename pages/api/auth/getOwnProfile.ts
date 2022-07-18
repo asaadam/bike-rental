@@ -9,7 +9,10 @@ const getOwnData = async (req: NextApiRequest, res: NextApiResponse) => {
     const user = await prisma.user.findFirst({
       include: {
         RentedBike: {
+
           include: {
+
+            BikeRating: true,
             bike: true
           }
         }

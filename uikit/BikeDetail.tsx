@@ -3,8 +3,10 @@ import {
   AccordionIcon,
   AccordionItem,
   AccordionPanel,
+  Box,
   Button,
   Checkbox,
+  filter,
   Grid,
   Heading,
   HStack,
@@ -35,12 +37,12 @@ function BikeDetail({
 }: Props) {
   return (
     <AccordionItem>
-      <HStack>
+      <HStack w="100%">
         <AccordionButton>
           <Grid
             width={'100%'}
             templateColumns={
-              variant === 'default' ? 'repeat(6, 1fr)' : 'repeat(5, 1fr)'
+              variant === 'default' ? 'repeat(5, 1fr)' : 'repeat(5, 1fr)'
             }
             gap={6}
           >
@@ -54,20 +56,24 @@ function BikeDetail({
                   Available for book{' '}
                   <Checkbox isChecked={bike.rentedData.length === 0} />
                 </Heading>
-                {bike.rentedData.length === 0 && filter && (
-                  <BookBike bike={bike} filter={filter} onSuccess={onSuccess} />
-                )}
               </>
             )}
             {variant === 'admin' && <AccordionIcon />}
           </Grid>
         </AccordionButton>
-        {variant === 'admin' && (
-          <HStack>
-            <Button onClick={onEdit}>Edit Bike</Button>
-            <Button>Delete Bike</Button>
-          </HStack>
-        )}
+        <Box flex={1} minW="100px">
+          {variant === 'admin' ? (
+            <HStack>
+              <Button onClick={onEdit}>Edit Bike</Button>
+              <Button>Delete Bike</Button>
+            </HStack>
+          ) : (
+            bike.rentedData.length === 0 &&
+            filter && (
+              <BookBike bike={bike} filter={filter} onSuccess={onSuccess} />
+            )
+          )}
+        </Box>
       </HStack>
       {variant === 'admin' && (
         <AccordionPanel pb={4}>

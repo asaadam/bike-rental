@@ -1,6 +1,8 @@
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { ListBikeContainer } from '../modules/Bike/ListBike';
+import { MyBooking } from '../modules/Profile/MyBooking';
 import { Layout } from '../uikit/Layout';
 
 const Home: NextPage = () => {
