@@ -35,6 +35,10 @@ type BookBikeRequest = {
   endDate: string
 }
 
+type CancelBookingRequest = {
+  rentedId: string
+}
+
 type RatingBikeRequest = {
   rentedId: string
   rating: number
@@ -44,4 +48,4 @@ type DeleteBikeRequest = {
   bikeId: string
 }
 
-export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest, BookBikeRequest, RatingBikeRequest, DeleteBikeRequest }
+export type { CancelBookingRequest, GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest, BookBikeRequest, RatingBikeRequest, DeleteBikeRequest }

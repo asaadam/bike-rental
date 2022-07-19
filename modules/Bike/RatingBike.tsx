@@ -14,6 +14,7 @@ import {
   FormLabel,
   Input,
   useToast,
+  VStack,
 } from '@chakra-ui/react';
 import { Bike } from '@prisma/client';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -74,34 +75,36 @@ function RatingBike({ bike, rentedId, onSuccess }: Props) {
           <ModalHeader>Modal Title</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Heading size="sm">Give Rating For this bike </Heading>
-            <Heading size="xs">Model : {bike.model}</Heading>
-            <Heading size="xs">Location : {bike.location}</Heading>
-            <Heading size="xs">Color : {bike.color}</Heading>
-            <Heading size="xs"> Rating : {bike.rating} </Heading>
-            <form id="rating-form" onSubmit={handleSubmit(onSubmit)}>
-              <FormControl isInvalid={!!errors.rating}>
-                <FormLabel htmlFor="email">Color</FormLabel>
-                <Input
-                  id="rating"
-                  type={'number'}
-                  placeholder="Input Rating"
-                  {...register('rating', {
-                    required: 'This is required',
-                    max: 5,
-                    valueAsNumber: true,
-                    validate: (value) => {
-                      if (value > 5) {
-                        return 'Rating must be less than 5';
-                      }
-                    },
-                  })}
-                />
-                <FormErrorMessage>
-                  {errors.rating && 'Value must between 0 and 5'}
-                </FormErrorMessage>
-              </FormControl>
-            </form>
+            <VStack>
+              <Heading size="sm">Give Rating For this bike </Heading>
+              <Heading size="xs">Model : {bike.model}</Heading>
+              <Heading size="xs">Location : {bike.location}</Heading>
+              <Heading size="xs">Color : {bike.color}</Heading>
+              <Heading size="xs"> Bike Rating : {bike.rating} </Heading>
+              <form id="rating-form" onSubmit={handleSubmit(onSubmit)}>
+                <FormControl isInvalid={!!errors.rating}>
+                  <FormLabel htmlFor="rating">Input Rating</FormLabel>
+                  <Input
+                    id="rating"
+                    type={'number'}
+                    placeholder="Input Rating"
+                    {...register('rating', {
+                      required: 'This is required',
+                      max: 5,
+                      valueAsNumber: true,
+                      validate: (value) => {
+                        if (value > 5) {
+                          return 'Rating must be less than 5';
+                        }
+                      },
+                    })}
+                  />
+                  <FormErrorMessage>
+                    {errors.rating && 'Value must between 0 and 5'}
+                  </FormErrorMessage>
+                </FormControl>
+              </form>
+            </VStack>
           </ModalBody>
 
           <ModalFooter>

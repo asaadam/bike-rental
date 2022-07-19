@@ -44,7 +44,7 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
           BikeRating: true
         },
         where: (startDateQuery && endDate) ? {
-          isCancled: false,
+          isCanceled: false,
           OR: [
             {
               AND: [
