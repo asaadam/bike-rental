@@ -40,4 +40,8 @@ type RatingBikeRequest = {
   rating: number
 }
 
-export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest, BookBikeRequest, RatingBikeRequest }
+type DeleteBikeRequest = {
+  bikeId: string
+}
+
+export type { GetAllBikeRequestType, GetAllBikeResponseType, AllBikeType, CreateBikeRequest, BookBikeRequest, RatingBikeRequest, DeleteBikeRequest }

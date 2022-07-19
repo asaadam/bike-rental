@@ -5,12 +5,12 @@ import { prisma } from "../../../utils/prisma";
 const DeleteBike = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await checkValidToken(req);
-    const { id } = req.body;
-    if (id) {
+    const { bikeId } = req.body;
+    if (bikeId) {
       try {
         const bike = await prisma.bike.delete({
           where: {
-            id
+            id: bikeId,
           }
         });
         return res.json({ message: 'delete bike success', bike });
@@ -19,6 +19,7 @@ const DeleteBike = async (req: NextApiRequest, res: NextApiResponse) => {
         return res.status(500).send({ message: e });
       }
     }
+    return res.status(400).send({ message: 'id is required' });
   }
   catch (e) {
     return res.status(401).json(e);

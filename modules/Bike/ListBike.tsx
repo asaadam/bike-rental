@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   Spinner,
   useDisclosure,
+  useToast,
   VStack,
 } from '@chakra-ui/react';
 import { BikeDetail } from '../../uikit/BikeDetail';
@@ -22,6 +23,8 @@ import dayjs from 'dayjs';
 import { CreateBikeContainer } from './CreateBike';
 import { AllBikeType } from '../../types/Bike';
 import Head from 'next/head';
+import { useDeleteBike } from './DeleteBikeService';
+import { ApiError } from '../../types/Error';
 
 export type BikeDetailVariant = 'default' | 'manager';
 
@@ -54,11 +57,41 @@ function ListBikeContainer({ variant = 'default' }: Props) {
       : {}
   );
 
-  const [selectedData, setSelectedData] = useState<AllBikeType>();
+  const { mutate, isLoading: isLoadingMutate } = useDeleteBike();
+
+  const [selectedData, setSelectedData] = useState<
+    AllBikeType & {
+      isDelete?: boolean;
+    }
+  >();
+
+  const toast = useToast();
 
   const customClose = () => {
     setSelectedData(undefined);
     onClose();
+  };
+
+  const onDelete = () => {
+    if (selectedData) {
+      mutate(
+        { bikeId: selectedData?.id },
+        {
+          onSuccess: () => {
+            refetch();
+            customClose();
+          },
+          onError: (e) => {
+            const error = e as ApiError;
+            toast({
+              title: error.response.data.message,
+              status: 'error',
+              isClosable: true,
+            });
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -143,6 +176,10 @@ function ListBikeContainer({ variant = 'default' }: Props) {
                 onOpen();
                 setSelectedData(bike);
               }}
+              onDelete={() => {
+                onOpen();
+                setSelectedData({ ...bike, isDelete: true });
+              }}
             />
           ))}
         </Accordion>
@@ -153,23 +190,52 @@ function ListBikeContainer({ variant = 'default' }: Props) {
       <Modal isOpen={isOpen} onClose={customClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Create New Bike</ModalHeader>
+          <ModalHeader>
+            {selectedData?.isDelete ? 'Delete Bike' : 'Edit Bike'}
+          </ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <CreateBikeContainer
-              defaultValues={
-                selectedData && {
-                  id: selectedData.id,
-                  color: selectedData.color,
-                  location: selectedData.location,
-                  model: selectedData.model,
+            {selectedData?.isDelete ? (
+              <>
+                <Heading size="sm">
+                  Are you sure to delete this following data ? :{' '}
+                </Heading>
+                <Heading size="xs">Model : {selectedData?.model}</Heading>
+                <Heading size="xs">Color : {selectedData.color}</Heading>
+                <Heading size="xs">Location : {selectedData.location}</Heading>
+                <HStack mt={4} justifyContent="flex-end">
+                  <Button
+                    isLoading={isLoadingMutate}
+                    onClick={onDelete}
+                    colorScheme="red"
+                  >
+                    Delete
+                  </Button>
+                  <Button
+                    onClick={onClose}
+                    isLoading={isLoadingMutate}
+                    variant="ghost"
+                  >
+                    Cancel
+                  </Button>
+                </HStack>
+              </>
+            ) : (
+              <CreateBikeContainer
+                defaultValues={
+                  selectedData && {
+                    id: selectedData.id,
+                    color: selectedData.color,
+                    location: selectedData.location,
+                    model: selectedData.model,
+                  }
                 }
-              }
-              onSuccess={() => {
-                refetch();
-                onClose();
-              }}
-            />
+                onSuccess={() => {
+                  refetch();
+                  onClose();
+                }}
+              />
+            )}
           </ModalBody>
         </ModalContent>
       </Modal>

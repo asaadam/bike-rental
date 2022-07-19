@@ -25,6 +25,7 @@ type Props = {
     startDate: Date;
     endDate: Date;
   };
+  onDelete?: () => void;
   onSuccess?: () => void;
 };
 
@@ -34,6 +35,7 @@ function BikeDetail({
   onEdit,
   filter,
   onSuccess,
+  onDelete,
 }: Props) {
   return (
     <AccordionItem>
@@ -65,7 +67,7 @@ function BikeDetail({
           {variant === 'manager' ? (
             <HStack w="100%">
               <Button onClick={onEdit}>Edit Bike</Button>
-              <Button>Delete Bike</Button>
+              <Button onClick={onDelete}>Delete Bike</Button>
             </HStack>
           ) : (
             bike.rentedData.length === 0 &&
