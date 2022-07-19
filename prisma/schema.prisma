@@ -42,7 +42,7 @@ model RentedBike {
   userId     String
   startDate  DateTime
   endDate    DateTime
-  isCancled  Boolean     @default(false)
+  isCanceled Boolean     @default(false)
   createdAt  DateTime    @default(now())
   bike       Bike        @relation(fields: [bikeId], references: [id], onDelete: Cascade)
   user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
