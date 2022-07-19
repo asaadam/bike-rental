@@ -196,14 +196,14 @@ function ListBikeContainer({ variant = 'default' }: Props) {
           <ModalCloseButton />
           <ModalBody>
             {selectedData?.isDelete ? (
-              <>
+              <VStack>
                 <Heading size="sm">
                   Are you sure to delete this following data ? :{' '}
                 </Heading>
                 <Heading size="xs">Model : {selectedData?.model}</Heading>
                 <Heading size="xs">Color : {selectedData.color}</Heading>
                 <Heading size="xs">Location : {selectedData.location}</Heading>
-                <HStack mt={4} justifyContent="flex-end">
+                <HStack>
                   <Button
                     isLoading={isLoadingMutate}
                     onClick={onDelete}
@@ -219,7 +219,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
                     Cancel
                   </Button>
                 </HStack>
-              </>
+              </VStack>
             ) : (
               <CreateBikeContainer
                 defaultValues={

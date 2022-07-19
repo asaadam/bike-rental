@@ -18,9 +18,10 @@ import { Rentedbike } from './RentedBike';
 type Props = {
   user: UserResponse;
   onEdit?: () => void;
+  onDelete?: () => void;
 };
 
-function UserDetail({ user, onEdit }: Props) {
+function UserDetail({ user, onEdit, onDelete }: Props) {
   return (
     <AccordionItem>
       <HStack>
@@ -34,7 +35,7 @@ function UserDetail({ user, onEdit }: Props) {
         </AccordionButton>
         <HStack>
           <Button onClick={onEdit}>Edit User</Button>
-          <Button>Delete User</Button>
+          <Button onClick={onDelete}>Delete User</Button>
         </HStack>
       </HStack>
       <AccordionPanel pb={4}>

@@ -29,6 +29,10 @@ type UserResponse = User & {
 
 type UsersResponse = Array<UserResponse>;
 
+type DeleteUserRequest = {
+  id: string
+}
+
 export type {
   RentedBikeWithBike,
   LoginRequest,
@@ -36,5 +40,6 @@ export type {
   RegisterRequest,
   UserResponse,
   UsersResponse,
+  DeleteUserRequest
 }
 

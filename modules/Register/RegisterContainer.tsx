@@ -129,6 +129,10 @@ function RegisterContainer({
               placeholder="Email"
               {...register('email', {
                 required: 'This is required',
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                  message: 'invalid email address',
+                },
               })}
             />
             <FormErrorMessage>
