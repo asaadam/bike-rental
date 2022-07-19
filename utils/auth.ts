@@ -20,7 +20,7 @@ const joiSchema = Joi.object({
   name: Joi.string().required(),
   email: Joi.string().email().required(),
   password: Joi.string().required().pattern(/^[a-zA-Z0-9]{3,30}$/),
-  role: Joi.string().optional().valid("USER", "ADMIN"),
+  role: Joi.string().optional().valid("USER", "MANAGER"),
   id: Joi.string().optional(),
 })
 

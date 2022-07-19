@@ -22,7 +22,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     if (user) {
-      if (user?.role !== 'ADMIN') {
+      if (user?.role !== 'MANAGER') {
         router.push('/');
       }
     }
@@ -39,7 +39,7 @@ export default function DashboardPage() {
             </TabList>
             <TabPanels>
               <TabPanel>
-                <ListBikeContainer variant="admin" />
+                <ListBikeContainer variant="manager" />
               </TabPanel>
               <TabPanel>
                 <ListUsers />

@@ -1,12 +1,14 @@
 import {
   Accordion,
   Button,
+  Heading,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useState } from 'react';
@@ -16,7 +18,7 @@ import { RegisterContainer } from '../Register/RegisterContainer';
 import { useGetUsersList } from './GetListUserProfileService';
 
 function ListUsers() {
-  const { data, refetch } = useGetUsersList();
+  const { data, refetch, isLoading } = useGetUsersList();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedData, setSelectedData] = useState<UserResponse>();
 
@@ -31,16 +33,22 @@ function ListUsers() {
         Create User{' '}
       </Button>
       <Accordion allowMultiple width={'100%'}>
-        {data?.map?.((user) => (
-          <UserDetail
-            user={user}
-            key={user.id}
-            onEdit={() => {
-              onOpen();
-              setSelectedData(user);
-            }}
-          />
-        ))}
+        {isLoading ? (
+          <Spinner />
+        ) : data?.length ? (
+          data.map?.((user) => (
+            <UserDetail
+              user={user}
+              key={user.id}
+              onEdit={() => {
+                onOpen();
+                setSelectedData(user);
+              }}
+            />
+          ))
+        ) : (
+          <Heading>No Data</Heading>
+        )}
       </Accordion>
       <Modal isOpen={isOpen} onClose={customClose}>
         <ModalOverlay />
@@ -56,7 +64,7 @@ function ListUsers() {
                   rePassword: '',
                 }
               }
-              variant="admin"
+              variant="manager"
               onSuccess={() => {
                 onClose();
                 refetch();

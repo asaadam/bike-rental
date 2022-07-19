@@ -49,7 +49,7 @@ function UserDetail({ user, onEdit }: Props) {
             onSuccess={() => {}}
             rentedBike={rentedBike}
             key={rentedBike.id}
-            variant="admin"
+            variant="manager"
           />
         ))}
       </AccordionPanel>

@@ -58,11 +58,11 @@ function BikeDetail({
                 </Heading>
               </>
             )}
-            {variant === 'admin' && <AccordionIcon />}
+            {variant === 'manager' && <AccordionIcon />}
           </Grid>
         </AccordionButton>
-        <Box flex={1} minW={variant !== 'admin' ? '100px' : undefined}>
-          {variant === 'admin' ? (
+        <Box flex={1} minW={variant !== 'manager' ? '100px' : undefined}>
+          {variant === 'manager' ? (
             <HStack w="100%">
               <Button onClick={onEdit}>Edit Bike</Button>
               <Button>Delete Bike</Button>
@@ -75,7 +75,7 @@ function BikeDetail({
           )}
         </Box>
       </HStack>
-      {variant === 'admin' && (
+      {variant === 'manager' && (
         <AccordionPanel pb={4}>
           <Heading size="md">Rented Data</Heading>
           {bike?.rentedData?.map?.((rented) => (

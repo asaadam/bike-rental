@@ -16,7 +16,7 @@ function ButtonNavbar() {
   if (isLoggedIn) {
     return (
       <HStack>
-        {user?.role === 'ADMIN' && (
+        {user?.role === 'MANAGER' && (
           <>
             <Link href="/dashboard" passHref>
               <Button>Go To dashboard</Button>

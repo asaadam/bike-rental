@@ -24,7 +24,7 @@ type FormValues = {
   id?: string;
 };
 
-type RegisterVariant = 'admin' | 'user';
+type RegisterVariant = 'manager' | 'user';
 
 type Props = {
   onSuccess?: () => void;
@@ -135,7 +135,7 @@ function RegisterContainer({
               {errors.email && errors.email.message}
             </FormErrorMessage>
           </FormControl>
-          {variant === 'admin' && (
+          {variant === 'manager' && (
             <>
               <FormControl>
                 <FormLabel htmlFor="email">Role</FormLabel>
@@ -146,7 +146,7 @@ function RegisterContainer({
                   })}
                 >
                   <option value="USER">User</option>
-                  <option value="ADMIN">Admin</option>
+                  <option value="MANAGER">Manager</option>
                 </Select>
               </FormControl>
               <FormErrorMessage>
@@ -155,7 +155,8 @@ function RegisterContainer({
             </>
           )}
 
-          {(variant === 'user' || (variant === 'admin' && !defaultValues)) && (
+          {(variant === 'user' ||
+            (variant === 'manager' && !defaultValues)) && (
             <>
               <FormControl isInvalid={!!errors.password?.message}>
                 <FormLabel htmlFor="password">Password</FormLabel>

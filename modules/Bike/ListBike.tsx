@@ -10,6 +10,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react';
@@ -20,8 +21,9 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { CreateBikeContainer } from './CreateBike';
 import { AllBikeType } from '../../types/Bike';
+import Head from 'next/head';
 
-export type BikeDetailVariant = 'default' | 'admin';
+export type BikeDetailVariant = 'default' | 'manager';
 
 type Props = {
   variant?: BikeDetailVariant;
@@ -39,7 +41,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { data, refetch } = useGetBike(
+  const { data, refetch, isLoading } = useGetBike(
     variant === 'default'
       ? {
           startDateQuery: filterData.startDate.toISOString(),
@@ -117,30 +119,36 @@ function ListBikeContainer({ variant = 'default' }: Props) {
           </VStack>
         </HStack>
       )}
-      {variant === 'admin' && (
+      {variant === 'manager' && (
         <Button onClick={onOpen} mb={4}>
           Create bike
         </Button>
       )}
 
-      <Accordion allowMultiple width={'100%'} mt={4}>
-        {data?.bikeData?.map?.((bike) => (
-          <BikeDetail
-            onSuccess={() => refetch()}
-            filter={{
-              startDate: filterData.startDate,
-              endDate: filterData.endDate,
-            }}
-            bike={bike}
-            key={bike.id}
-            variant={variant}
-            onEdit={() => {
-              onOpen();
-              setSelectedData(bike);
-            }}
-          />
-        ))}
-      </Accordion>
+      {isLoading ? (
+        <Spinner />
+      ) : data?.bikeData.length ? (
+        <Accordion allowMultiple width={'100%'} mt={4}>
+          {data?.bikeData?.map?.((bike) => (
+            <BikeDetail
+              onSuccess={() => refetch()}
+              filter={{
+                startDate: filterData.startDate,
+                endDate: filterData.endDate,
+              }}
+              bike={bike}
+              key={bike.id}
+              variant={variant}
+              onEdit={() => {
+                onOpen();
+                setSelectedData(bike);
+              }}
+            />
+          ))}
+        </Accordion>
+      ) : (
+        <Heading>No Data</Heading>
+      )}
 
       <Modal isOpen={isOpen} onClose={customClose}>
         <ModalOverlay />
