@@ -12,7 +12,7 @@ datasource db {
 }
 
 enum ROLE {
-  ADMIN
+  MANAGER
   USER
 }
 
@@ -44,8 +44,8 @@ model RentedBike {
   endDate    DateTime
   isCancled  Boolean     @default(false)
   createdAt  DateTime    @default(now())
-  bike       Bike        @relation(fields: [bikeId], references: [id])
-  user       User        @relation(fields: [userId], references: [id])
+  bike       Bike        @relation(fields: [bikeId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
   BikeRating BikeRating?
 }
 
