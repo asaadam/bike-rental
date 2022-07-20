@@ -23,7 +23,7 @@ const GetAllBike = async (req: NextApiRequest, res: NextApiResponse) => {
       page: Joi.string().optional(),
       limit: Joi.string().optional(),
       startDateQuery: Joi.string().optional(),
-      endDate: Joi.string().optional(),
+      endDate: Joi.date().greater(Joi.ref("startDateQuery")).required(),
       color: Joi.string().optional(),
       model: Joi.string().optional(),
       location: Joi.string().optional(),
