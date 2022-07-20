@@ -14,7 +14,8 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRefetchStore } from '../../store/DashBoardStore';
 import { UserResponse } from '../../types/Auth';
 import { ApiError } from '../../types/Error';
 import { UserDetail } from '../../uikit/UserDetail';
@@ -31,6 +32,8 @@ function ListUsers() {
     }
   >();
 
+  const { setRefetchFunction, triggerRefetch } = useRefetchStore();
+
   const { mutate, isLoading: isLoadingDelete } = useDeleteUser();
 
   const toast = useToast();
@@ -46,7 +49,7 @@ function ListUsers() {
         { id: selectedData.id },
         {
           onSuccess: () => {
-            refetch();
+            triggerRefetch();
             customClose();
           },
           onError: (e) => {
@@ -61,6 +64,10 @@ function ListUsers() {
       );
     }
   };
+
+  useEffect(() => {
+    setRefetchFunction(refetch);
+  }, [refetch, setRefetchFunction]);
 
   return (
     <>
@@ -129,7 +136,7 @@ function ListUsers() {
                 variant="manager"
                 onSuccess={() => {
                   onClose();
-                  refetch();
+                  triggerRefetch();
                 }}
               />
             )}

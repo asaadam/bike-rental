@@ -25,6 +25,7 @@ import { AllBikeType } from '../../types/Bike';
 import { useDeleteBike } from './DeleteBikeService';
 import { ApiError } from '../../types/Error';
 import { useRouter } from 'next/router';
+import { useRefetchStore } from '../../store/DashBoardStore';
 
 export type BikeDetailVariant = 'default' | 'manager';
 
@@ -44,6 +45,7 @@ type GetBikeDataFilter = {
 function ListBikeContainer({ variant = 'default' }: Props) {
   const router = useRouter();
   const query = router.query as unknown as GetBikeDataFilter;
+  const { setRefetchFunction, triggerRefetch } = useRefetchStore();
 
   const [filterData, setFilterData] = useState({
     startDate: dayjs().toString(),
@@ -90,7 +92,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
         { bikeId: selectedData?.id },
         {
           onSuccess: () => {
-            refetch();
+            triggerRefetch();
             customClose();
           },
           onError: (e) => {
@@ -141,6 +143,10 @@ function ListBikeContainer({ variant = 'default' }: Props) {
       refetch();
     }
   }, [query, refetch]);
+
+  useEffect(() => {
+    setRefetchFunction(refetch);
+  }, [refetch, setRefetchFunction]);
 
   return (
     <>
@@ -261,7 +267,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
         <Accordion allowMultiple width={'100%'} mt={4}>
           {data?.bikeData?.map?.((bike) => (
             <BikeDetail
-              onSuccess={() => refetch()}
+              onSuccess={() => triggerRefetch()}
               filter={{
                 startDate: dayjs(filterData.startDate).toDate(),
                 endDate: dayjs(filterData.endDate).toDate(),
@@ -328,8 +334,8 @@ function ListBikeContainer({ variant = 'default' }: Props) {
                   }
                 }
                 onSuccess={() => {
-                  refetch();
                   onClose();
+                  triggerRefetch();
                 }}
               />
             )}
