@@ -99,7 +99,8 @@ function Rentedbike({ rentedBike, variant = 'default', onSuccess }: Props) {
           )}
         </>
         {dayjs().isBefore(dayjs(rentedBike.endDate)) &&
-          !rentedBike.isCanceled && (
+          !rentedBike.isCanceled &&
+          variant === 'default' && (
             <Button onClick={onOpen}>Cancel Booking</Button>
           )}
         {rentedBike.isCanceled && (

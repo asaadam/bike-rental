@@ -98,6 +98,10 @@ function BikeDetail({
                 Rating:
                 {rented.BikeRating ? rented.BikeRating.rating : 'No Rating'}
               </Heading>
+              <HStack>
+                <Heading size="sm">Canceled</Heading>
+                <Checkbox isChecked={rented.isCanceled} />
+              </HStack>
             </Grid>
           ))}
         </AccordionPanel>

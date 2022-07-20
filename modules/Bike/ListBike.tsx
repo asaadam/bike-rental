@@ -18,13 +18,13 @@ import {
 import { BikeDetail } from '../../uikit/BikeDetail';
 import { useGetBike } from './ListBikeService';
 import DatePicker from 'react-datepicker';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { CreateBikeContainer } from './CreateBike';
 import { AllBikeType } from '../../types/Bike';
-import Head from 'next/head';
 import { useDeleteBike } from './DeleteBikeService';
 import { ApiError } from '../../types/Error';
+import { useRouter } from 'next/router';
 
 export type BikeDetailVariant = 'default' | 'manager';
 
@@ -32,10 +32,22 @@ type Props = {
   variant?: BikeDetailVariant;
 };
 
+type GetBikeDataFilter = {
+  startDate: string;
+  endDate: string;
+  color: string;
+  location: string;
+  model: string;
+  rating: string;
+};
+
 function ListBikeContainer({ variant = 'default' }: Props) {
+  const router = useRouter();
+  const query = router.query as unknown as GetBikeDataFilter;
+
   const [filterData, setFilterData] = useState({
-    startDate: dayjs().toDate(),
-    endDate: dayjs().add(1, 'day').toDate(),
+    startDate: dayjs().toString(),
+    endDate: dayjs().add(1, 'day').toString(),
     color: '',
     location: '',
     model: '',
@@ -47,12 +59,12 @@ function ListBikeContainer({ variant = 'default' }: Props) {
   const { data, refetch, isLoading } = useGetBike(
     variant === 'default'
       ? {
-          startDateQuery: filterData.startDate.toISOString(),
-          endDate: filterData.endDate.toISOString(),
-          color: filterData.color || undefined,
-          location: filterData.location || undefined,
-          model: filterData.model || undefined,
-          rating: filterData.rating || undefined,
+          color: query.color || undefined,
+          location: query.location || undefined,
+          model: query.model || undefined,
+          rating: query.rating || undefined,
+          startDateQuery: dayjs(query.startDate).toISOString(),
+          endDate: dayjs(query.endDate).toISOString(),
         }
       : {}
   );
@@ -94,63 +106,148 @@ function ListBikeContainer({ variant = 'default' }: Props) {
     }
   };
 
+  useEffect(() => {
+    if (!query.startDate && !query.endDate) {
+      router.replace({
+        pathname: router.pathname,
+        query: {
+          ...router.query,
+          startDate: dayjs().format('YYYY-MM-DD'),
+          endDate: dayjs().add(1, 'day').format('YYYY-MM-DD'),
+        },
+      });
+    } else {
+      setFilterData({
+        startDate: dayjs(query.startDate).toString(),
+        endDate: dayjs(query.endDate).toString(),
+        color: query.color || '',
+        location: query.location || '',
+        model: query.model || '',
+        rating: query.rating || '',
+      });
+    }
+  }, [
+    query.endDate,
+    query.startDate,
+    router,
+    query.color,
+    query.location,
+    query.model,
+    query.rating,
+  ]);
+
+  useEffect(() => {
+    if (query.startDate && query.endDate) {
+      refetch();
+    }
+  }, [query, refetch]);
+
   return (
     <>
       {variant === 'default' && (
-        <HStack>
+        <form id="form-query">
           <VStack>
-            <Heading size="sm">Start Date</Heading>
-            <DatePicker
-              minDate={dayjs().toDate()}
-              selected={filterData.startDate}
-              onChange={(date: Date) => {
-                setFilterData({ ...filterData, startDate: date });
+            <HStack>
+              <VStack>
+                <Heading size="sm">Start Date</Heading>
+                <DatePicker
+                  minDate={dayjs().toDate()}
+                  selected={dayjs(filterData.startDate).toDate()}
+                  onChange={(date: Date) => {
+                    setFilterData({
+                      ...filterData,
+                      startDate: dayjs(date).format('YYYY-MM-DD'),
+                    });
+                  }}
+                />
+              </VStack>
+              <VStack>
+                <Heading size="sm">End Date</Heading>
+                <DatePicker
+                  minDate={dayjs(filterData.startDate).toDate()}
+                  selected={dayjs(filterData.endDate).toDate()}
+                  onChange={(date: Date) =>
+                    setFilterData({
+                      ...filterData,
+                      endDate: dayjs(date).format('YYYY-MM-DD'),
+                    })
+                  }
+                />
+              </VStack>
+              <VStack>
+                <Heading size="sm">Color</Heading>
+                <Input
+                  value={filterData.color}
+                  onChange={(value) =>
+                    setFilterData({ ...filterData, color: value.target.value })
+                  }
+                />
+              </VStack>
+              <VStack>
+                <Heading size="sm">Location</Heading>
+                <Input
+                  value={filterData.location}
+                  onChange={(value) =>
+                    setFilterData({
+                      ...filterData,
+                      location: value.target.value,
+                    })
+                  }
+                />
+              </VStack>
+              <VStack>
+                <Heading size="sm">Model</Heading>
+                <Input
+                  value={filterData.model}
+                  onChange={(value) =>
+                    setFilterData({ ...filterData, model: value.target.value })
+                  }
+                />
+              </VStack>
+              <VStack>
+                <Heading size="sm">Rating</Heading>
+                <Input
+                  value={filterData.rating}
+                  type="number"
+                  min={0}
+                  max={5}
+                  onChange={(value) => {
+                    setFilterData({
+                      ...filterData,
+                      rating: value.target.value,
+                    });
+                  }}
+                />
+              </VStack>
+            </HStack>
+            <Button
+              type="submit"
+              form="form-query"
+              onClick={(e) => {
+                e.preventDefault();
+                //check if startDate is less than endDate
+                if (
+                  dayjs(filterData.startDate).isAfter(dayjs(filterData.endDate))
+                ) {
+                  return toast({
+                    title: 'Start date must be before end date',
+                    status: 'error',
+                    isClosable: true,
+                  });
+                }
+                router.push({
+                  pathname: router.pathname,
+                  query: {
+                    ...query,
+                    ...filterData,
+                  },
+                });
               }}
-            />
+            >
+              Search
+            </Button>
           </VStack>
-          <VStack>
-            <Heading size="sm">End Date</Heading>
-            <DatePicker
-              minDate={dayjs(filterData.startDate).toDate()}
-              selected={filterData.endDate}
-              onChange={(date: Date) =>
-                setFilterData({ ...filterData, endDate: date })
-              }
-            />
-          </VStack>
-          <VStack>
-            <Heading size="sm">Color</Heading>
-            <Input
-              onChange={(value) =>
-                setFilterData({ ...filterData, color: value.target.value })
-              }
-            />
-          </VStack>
-          <VStack>
-            <Heading size="sm">Location</Heading>
-            <Input
-              onChange={(value) =>
-                setFilterData({ ...filterData, location: value.target.value })
-              }
-            />
-          </VStack>
-          <VStack>
-            <Heading size="sm">Rating</Heading>
-            <Input
-              onChange={(value) =>
-                setFilterData({ ...filterData, rating: value.target.value })
-              }
-            />
-          </VStack>
-          <VStack>
-            <Heading size="sm">Model</Heading>
-            <Input
-              onChange={(value) =>
-                setFilterData({ ...filterData, model: value.target.value })
-              }
-            />
-          </VStack>
-        </HStack>
+        </form>
       )}
       {variant === 'manager' && (
         <Button onClick={onOpen} mb={4}>
@@ -166,8 +263,8 @@ function ListBikeContainer({ variant = 'default' }: Props) {
             <BikeDetail
               onSuccess={() => refetch()}
               filter={{
-                startDate: filterData.startDate,
-                endDate: filterData.endDate,
+                startDate: dayjs(filterData.startDate).toDate(),
+                endDate: dayjs(filterData.endDate).toDate(),
               }}
               bike={bike}
               key={bike.id}

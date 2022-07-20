@@ -9,7 +9,9 @@ async function getBike(request?: GetAllBikeRequestType): Promise<GetAllBikeRespo
 }
 
 function useGetBike(params?: GetAllBikeRequestType) {
-  return useQuery([params], async () => await getBike(params));
+  return useQuery([params], async () => await getBike(params), {
+    enabled: false,
+  });
 }
 
 export { useGetBike }
