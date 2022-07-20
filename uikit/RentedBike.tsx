@@ -88,14 +88,14 @@ function Rentedbike({ rentedBike, variant = 'default', onSuccess }: Props) {
               <br />
               {rentedBike.BikeRating.rating}{' '}
             </Heading>
-          ) : variant === 'default' ? (
+          ) : variant === 'default' && !rentedBike.isCanceled ? (
             <RatingBike
               bike={rentedBike.bike}
               rentedId={rentedBike.id}
               onSuccess={onSuccess}
             />
           ) : (
-            <p>No Rating yet</p>
+            <p>No Rating </p>
           )}
         </>
         {dayjs().isBefore(dayjs(rentedBike.endDate)) &&
