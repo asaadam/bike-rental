@@ -1,9 +1,10 @@
 import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
-import type { NextPage } from 'next';
+import type { GetServerSidePropsContext, NextPage } from 'next';
 import Head from 'next/head';
 import { ListBikeContainer } from '../modules/Bike/ListBike';
 import { MyBooking } from '../modules/Profile/MyBooking';
 import { Layout } from '../uikit/Layout';
+import Cookies from 'universal-cookie';
 
 const Home: NextPage = () => {
   return (
@@ -19,3 +20,18 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const cookies = new Cookies(context.req.headers.cookie);
+  if (cookies.get('isLoggedIn') && cookies.get('role') === 'MANAGER') {
+    return {
+      redirect: {
+        permanent: false,
+        destination: '/dashboard',
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+}

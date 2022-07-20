@@ -12,6 +12,9 @@ function MyBooking() {
   return (
     <>
       {isLoading && <Spinner />}
+      {!isLoading && !data?.RentedBike.length && (
+        <Heading>No booking data</Heading>
+      )}
       {data?.RentedBike?.map?.((rented) => (
         <Rentedbike rentedBike={rented} key={rented.id} onSuccess={refetch} />
       ))}

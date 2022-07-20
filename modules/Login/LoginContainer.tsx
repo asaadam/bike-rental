@@ -40,6 +40,7 @@ function LoginContainer() {
       onSuccess: (data) => {
         setUser(data.user);
         cookies.set('isLoggedIn', true);
+        cookies.set('role', data.user.role);
         router.push('/');
       },
       onError: (e) => {

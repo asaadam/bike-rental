@@ -16,16 +16,11 @@ function ButtonNavbar() {
   if (isLoggedIn) {
     return (
       <HStack>
-        {user?.role === 'MANAGER' && (
-          <>
-            <Link href="/dashboard" passHref>
-              <Button>Go To dashboard</Button>
-            </Link>
-          </>
+        {user?.role === 'USER' && (
+          <Link href="/mybooking" passHref>
+            <Button>My booking List</Button>
+          </Link>
         )}
-        <Link href="/mybooking" passHref>
-          <Button>My booking List</Button>
-        </Link>
         <Link href="/logout" passHref>
           <Button color="white">Logout</Button>
         </Link>
