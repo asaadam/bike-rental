@@ -1,6 +1,7 @@
 import {
   Accordion,
   Button,
+  Checkbox,
   Heading,
   HStack,
   Input,
@@ -46,7 +47,7 @@ function ListBikeContainer({ variant = 'default' }: Props) {
   const router = useRouter();
   const query = router.query as unknown as GetBikeDataFilter;
   const { setRefetchFunction, triggerRefetch } = useRefetchStore();
-
+  const [showBookedBike, setShowBookedBike] = useState(false);
   const [filterData, setFilterData] = useState({
     startDate: dayjs().toString(),
     endDate: dayjs().add(1, 'day').toString(),
@@ -256,35 +257,48 @@ function ListBikeContainer({ variant = 'default' }: Props) {
         </form>
       )}
       {variant === 'manager' && (
-        <Button onClick={onOpen} mb={4}>
-          Create bike
-        </Button>
+        <HStack>
+          <Button onClick={onOpen} mb={4}>
+            Create bike
+          </Button>
+          <Checkbox
+            isChecked={showBookedBike}
+            onChange={() => setShowBookedBike(!showBookedBike)}
+          >
+            Show Booked Bike Only
+          </Checkbox>
+        </HStack>
       )}
 
       {isLoading ? (
         <Spinner />
       ) : data?.bikeData.length ? (
         <Accordion allowMultiple width={'100%'} mt={4}>
-          {data?.bikeData?.map?.((bike) => (
-            <BikeDetail
-              onSuccess={() => triggerRefetch()}
-              filter={{
-                startDate: dayjs(filterData.startDate).toDate(),
-                endDate: dayjs(filterData.endDate).toDate(),
-              }}
-              bike={bike}
-              key={bike.id}
-              variant={variant}
-              onEdit={() => {
-                onOpen();
-                setSelectedData(bike);
-              }}
-              onDelete={() => {
-                onOpen();
-                setSelectedData({ ...bike, isDelete: true });
-              }}
-            />
-          ))}
+          {data?.bikeData?.map?.((bike) => {
+            if (bike.rentedData.length || !showBookedBike) {
+              return (
+                <BikeDetail
+                  onSuccess={() => triggerRefetch()}
+                  filter={{
+                    startDate: dayjs(filterData.startDate).toDate(),
+                    endDate: dayjs(filterData.endDate).toDate(),
+                  }}
+                  bike={bike}
+                  key={bike.id}
+                  variant={variant}
+                  onEdit={() => {
+                    onOpen();
+                    setSelectedData(bike);
+                  }}
+                  onDelete={() => {
+                    onOpen();
+                    setSelectedData({ ...bike, isDelete: true });
+                  }}
+                />
+              );
+            }
+            return null;
+          })}
         </Accordion>
       ) : (
         <Heading>No Data</Heading>

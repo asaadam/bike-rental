@@ -1,6 +1,7 @@
 import {
   Accordion,
   Button,
+  Checkbox,
   Heading,
   HStack,
   Modal,
@@ -31,6 +32,7 @@ function ListUsers() {
       isDelete?: true;
     }
   >();
+  const [showBookedUser, setShowBookedUSer] = useState(false);
 
   const { setRefetchFunction, triggerRefetch } = useRefetchStore();
 
@@ -71,27 +73,40 @@ function ListUsers() {
 
   return (
     <>
-      <Button onClick={onOpen} mb={4}>
-        Create User{' '}
-      </Button>
+      <HStack>
+        <Button onClick={onOpen} mb={4}>
+          Create User{' '}
+        </Button>
+        <Checkbox
+          isChecked={showBookedUser}
+          onChange={() => setShowBookedUSer(!showBookedUser)}
+        >
+          Show User Who Booked Bike
+        </Checkbox>
+      </HStack>
+
       <Accordion allowMultiple width={'100%'}>
         {isLoading ? (
           <Spinner />
         ) : data?.length ? (
-          data.map?.((user) => (
-            <UserDetail
-              user={user}
-              key={user.id}
-              onEdit={() => {
-                onOpen();
-                setSelectedData(user);
-              }}
-              onDelete={() => {
-                setSelectedData({ ...user, isDelete: true });
-                onOpen();
-              }}
-            />
-          ))
+          data.map?.((user) => {
+            if (user.RentedBike.length || !showBookedUser) {
+              return (
+                <UserDetail
+                  user={user}
+                  key={user.id}
+                  onEdit={() => {
+                    onOpen();
+                    setSelectedData(user);
+                  }}
+                  onDelete={() => {
+                    setSelectedData({ ...user, isDelete: true });
+                    onOpen();
+                  }}
+                />
+              );
+            }
+          })
         ) : (
           <Heading>No Data</Heading>
         )}

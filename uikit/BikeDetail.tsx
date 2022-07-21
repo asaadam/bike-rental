@@ -80,6 +80,11 @@ function BikeDetail({
       {variant === 'manager' && (
         <AccordionPanel pb={4}>
           <Heading size="md">Rented Data</Heading>
+          {bike.rentedData.length === 0 && (
+            <Heading color="red" size="md">
+              This bike it&#39;s not rented by any users yet
+            </Heading>
+          )}
           {bike?.rentedData?.map?.((rented) => (
             <Grid
               key={rented.id}
